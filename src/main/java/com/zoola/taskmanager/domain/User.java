@@ -1,10 +1,12 @@
-package com.zoola.task_manager.domain;
+package com.zoola.taskmanager.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
-@AllArgsConstructor
 @Data
+@AllArgsConstructor
+@Accessors(chain = true)
 public class User {
     private int id;
     private String email;

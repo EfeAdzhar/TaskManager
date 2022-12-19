@@ -1,4 +1,4 @@
-package com.zoola.task_manager.domain;
+package com.zoola.taskmanager.domain;
 
 public enum TaskStatus {
     NEW,

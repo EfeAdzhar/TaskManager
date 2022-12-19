@@ -1,4 +1,4 @@
-package com.zoola.task_manager.supportClasses.customExceptions;
+package com.zoola.taskmanager.customExceptions;
 
 public class TaskNotFoundException extends Exception {
 

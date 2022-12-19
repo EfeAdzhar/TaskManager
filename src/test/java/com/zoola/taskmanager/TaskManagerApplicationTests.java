@@ -1,4 +1,4 @@
-package com.zoola.task_manager;
+package com.zoola.taskmanager;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
