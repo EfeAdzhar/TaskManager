@@ -15,12 +15,11 @@ public class TaskRepository {
 
     //CRUD
     public void createOrUpdate(Task entity) {
-        for (Task task : data) {
-            if (Objects.equals(entity, task)) {
-                task.setVersion(task.getVersion() + 1);
-                break;
-            }
-        }
+        int currentVersion = data.stream()
+                .filter(task->Objects.equals(task.getId(), entity.getId()))
+                .mapToInt(Task::getVersion)
+                .max().orElse(0);
+        entity.setVersion(currentVersion + 1);
         data.add(entity);
     }
 

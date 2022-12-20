@@ -24,15 +24,11 @@ public class UserRepository {
                 .get();
     }
 
-    public void update(int id) throws UserException {
+    public void update(int id, User newUser) throws UserException {
         for (int i = 0; i < data.size(); i++) {
             User oldUser = data.get(i);
             if (oldUser.getId() == id) {
-                /**
-                 * Error
-                 * User newUser = user.setEmail().setName().setName();
-                 * data.set(i, newUser);
-                 * */
+                data.set(i, newUser);
             }
         }
     }

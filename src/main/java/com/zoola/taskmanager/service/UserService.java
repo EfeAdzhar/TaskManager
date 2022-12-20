@@ -19,8 +19,8 @@ public class UserService {
         return userRepository.read(id);
     }
 
-    public void update(int id) throws Exception {
-        userRepository.update(id);
+    public void update(int id, User newUser) throws Exception {
+        userRepository.update(id, newUser);
     }
 
     public void delete(int id) throws Exception {

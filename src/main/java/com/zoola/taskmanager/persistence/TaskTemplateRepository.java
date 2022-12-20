@@ -19,15 +19,11 @@ public class TaskTemplateRepository {
         data.add(entity);
     }
 
-    public void update(int id) {
-        for(int i = 0; i < data.size(); i++) {
+    public void update(int id, TaskTemplate newTaskTemplate) {
+        for (int i = 0; i < data.size(); i++) {
             var oldTaskTemplate = data.get(i);
-            if(Objects.equals(oldTaskTemplate.getId(), id)) {
-                TaskTemplate newTaskTemplate; // = oldTaskTemplate.setTaskType().setName().setDescription();
-                /**
-                 * Error
-                 * data.set(i, newTaskTemplate);
-                 * */
+            if (Objects.equals(oldTaskTemplate.getId(), id)) {
+                data.set(i, newTaskTemplate);
             }
         }
     }
