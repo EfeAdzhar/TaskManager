@@ -3,6 +3,7 @@ package com.zoola.taskmanager.service;
 import com.zoola.taskmanager.customExceptions.StatusException;
 import com.zoola.taskmanager.customExceptions.TaskNotFoundException;
 import com.zoola.taskmanager.domain.Task;
+import com.zoola.taskmanager.domain.TaskStatus;
 import com.zoola.taskmanager.persistence.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,28 +23,23 @@ public class TaskService {
         return taskRepository.read(id);
     }
 
-
     public void delete(int id) throws TaskNotFoundException {
         taskRepository.delete(id);
-    }
-
-    public Task findTask(int id) throws TaskNotFoundException {
-        return taskRepository.findTask(id);
     }
 
     public String readAllTasks() {
         return taskRepository.readAllTasks();
     }
 
-    public void setANewAssigneeForATask(int id) {
-        taskRepository.setANewAssigneeForATask(id);
-    }
-
-    public void unassignTask(int id) {
+    public void unassignTask(int id) throws TaskNotFoundException {
         taskRepository.unassignTask(id);
     }
 
-    public void changeStatusOfATask(int id) throws StatusException {
-        taskRepository.changeStatusOfTask(id);
+    public void reassignTask(int id, int userId) throws TaskNotFoundException {
+        taskRepository.reassignTask(id, userId);
+    }
+
+    public void changeTaskStatus(int id, TaskStatus taskStatus) throws StatusException, TaskNotFoundException {
+        taskRepository.changeTaskStatus(id, taskStatus);
     }
 }

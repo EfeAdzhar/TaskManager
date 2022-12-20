@@ -20,9 +20,14 @@ public class TaskTemplateRepository {
     }
 
     public void update(int id) {
-        for (TaskTemplate taskTemplate : data) {
-            if (Objects.equals(taskTemplate.getId(), id)) {
-                //??
+        for(int i = 0; i < data.size(); i++) {
+            var oldTaskTemplate = data.get(i);
+            if(Objects.equals(oldTaskTemplate.getId(), id)) {
+                TaskTemplate newTaskTemplate; // = oldTaskTemplate.setTaskType().setName().setDescription();
+                /**
+                 * Error
+                 * data.set(i, newTaskTemplate);
+                 * */
             }
         }
     }
@@ -39,15 +44,8 @@ public class TaskTemplateRepository {
     }
 
     //CUSTOM
-    public void changeType(int id) {
-        for (TaskTemplate taskTemplate : data) {
-            if (Objects.equals(taskTemplate.getId(), id)) {
-                if (taskTemplate.getTaskType().equals(TaskType.DEMO)) {
-                    taskTemplate.setTaskType(TaskType.BUG);
-                } else {
-                    taskTemplate.setTaskType(TaskType.DEMO);
-                }
-            }
-        }
+    public void changeType(int id, TaskType type) throws TaskNotFoundException {
+        TaskTemplate taskTemplate = read(id);
+        taskTemplate.setTaskType(type);
     }
 }

@@ -25,9 +25,10 @@ public class TaskRepository {
     }
 
     public Task read(int id) throws TaskNotFoundException {
+        //Finds the final version of a task
         return data.stream()
-                .filter(task -> Objects.equals(task.getId(), id))
-                .findFirst()
+                .filter(task -> Objects.equals(id, task.getId()))
+                .max(Comparator.comparing(Task::getVersion))
                 .get();
     }
 
@@ -36,13 +37,6 @@ public class TaskRepository {
     }
 
     //CUSTOM
-    public Task findTask(int id) throws TaskNotFoundException {
-        //Finds the final version of a task
-        return data.stream()
-                .max(Comparator.comparing(Task::getVersion))
-                .get();
-    }
-
     public String readAllTasks() {
         StringBuilder stringBuilder = new StringBuilder();
         for (Task task : data) {
@@ -51,38 +45,18 @@ public class TaskRepository {
         return stringBuilder.toString();
     }
 
-    public void setANewAssigneeForATask(int id) {
-        // assert taskList.size() != 0;
-        //for (Task task : taskList) {
-        //  if (task.getId() == id) {
-        // if(taskList.contains(task)) {
-        // task.setAssigneeId(
-        // @Accessor(chaining = true)
-        // new User().setId(id).getId())
-        // }
+    public void unassignTask(int id) throws TaskNotFoundException {
+        Task task = read(id);
+        task.setUserId(Integer.parseInt(""));
     }
 
-    //Questionable
-    public void unassignTask(int id) {
-        // for (Task task : taskList) {
-        //   if (task.getId() == id) {
-        //???
-        // task.setAssigneeId(new id);
+    public void reassignTask(int id, int userId) throws TaskNotFoundException {
+        Task task = read(id);
+        task.setUserId(userId);
     }
 
-    public void changeStatusOfTask(int id) throws StatusException {
-        for (Task task : data) {
-            if (task.getId() == id) {
-                if (task.getStatus().equals(TaskStatus.COMPLETED) || task.getStatus().equals(TaskStatus.FAILED)) {
-                    throw new StatusException();
-                } else {
-                    if (task.getStatus().equals(TaskStatus.NEW)) {
-                        task.setStatus(TaskStatus.IN_PROGRESS);
-                    } else if (task.getStatus().equals(TaskStatus.IN_PROGRESS)) {
-                        task.setStatus(TaskStatus.NEW);
-                    }
-                }
-            }
-        }
+    public void changeTaskStatus(int id, TaskStatus taskStatus) throws StatusException, TaskNotFoundException {
+        Task task = read(id);
+        task.setStatus(taskStatus);
     }
 }
