@@ -1,5 +1,6 @@
 package com.zoola.taskmanager.service;
 
+import com.zoola.taskmanager.customExceptions.UserException;
 import com.zoola.taskmanager.domain.User;
 import com.zoola.taskmanager.persistence.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,15 +16,15 @@ public class UserService {
         userRepository.create(entity);
     }
 
-    public User read(int id) throws Exception {
+    public User read(int id) throws UserException {
         return userRepository.read(id);
     }
 
-    public void update(int id, User newUser) throws Exception {
+    public void update(int id, User newUser) throws UserException {
         userRepository.update(id, newUser);
     }
 
-    public void delete(int id) throws Exception {
+    public void delete(int id) throws UserException {
         userRepository.delete(id);
     }
 }
