@@ -6,6 +6,7 @@ import com.zoola.taskmanager.domain.Task;
 import com.zoola.taskmanager.domain.TaskStatus;
 import com.zoola.taskmanager.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,12 +16,9 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
-    /**
-     * @bug(FIXME: 21.12.2022) get: Task is not creating
-     **/
     @GetMapping(path = "/get/{id}")
-    public void getTask(@PathVariable int id) throws TaskNotFoundException {
-        taskService.read(id);
+    public Task getTask(@PathVariable int id) throws TaskNotFoundException {
+       return taskService.read(id);
     }
 
     @GetMapping(path = "/getAll")
@@ -29,6 +27,7 @@ public class TaskController {
     }
 
     @PostMapping(path = "/create")
+    @ResponseStatus(value = HttpStatus.CREATED)
     public void createOrUpdateTask(@RequestBody Task task) {
         taskService.createOrUpdate(task);
     }
