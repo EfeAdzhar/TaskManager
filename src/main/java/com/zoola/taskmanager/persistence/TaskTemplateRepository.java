@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class TaskTemplateRepository {
@@ -29,10 +30,11 @@ public class TaskTemplateRepository {
     }
 
     public TaskTemplate read(int id) throws TaskNotFoundException {
-        return data.stream()
+        /**@bug(FIXME: Throwing noSuchElementException instead of TaskNotFoundException**/
+        return Optional.of(data.stream()
                 .filter(taskTemplate -> Objects.equals(taskTemplate.getId(), id))
                 .findFirst()
-                .get();
+                .get()).orElseThrow(TaskNotFoundException::new);
     }
 
     public void delete(int id) throws TaskNotFoundException {
