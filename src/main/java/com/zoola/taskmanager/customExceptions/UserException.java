@@ -1,7 +1,7 @@
 package com.zoola.taskmanager.customExceptions;
 
 public class UserException extends Exception {
-    public UserException(String message) {
+    public UserException() {
         super("User not found");
     }
 }

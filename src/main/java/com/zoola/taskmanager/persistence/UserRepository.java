@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class UserRepository {
@@ -18,10 +19,10 @@ public class UserRepository {
     }
 
     public User read(int id) throws UserException {
-        return data.stream()
+        return Optional.of(data.stream()
                 .filter(user -> user.getId() == id)
                 .findFirst()
-                .get();
+                .get()).orElseThrow(UserException::new);
     }
 
     public void update(int id, User newUser) throws UserException {

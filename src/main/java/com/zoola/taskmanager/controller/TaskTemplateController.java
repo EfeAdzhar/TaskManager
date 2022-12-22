@@ -37,7 +37,7 @@ public class TaskTemplateController {
     }
 
     /**
-     * @param(FIXME: 21.12.2022) changeType: Can't get enum from request
+     * @bug(FIXME: 21.12.2022) changeType: Can't get enum from request
      **/
     @PutMapping(path = "/changeType/{id}")
     @ResponseStatus(value = HttpStatus.ACCEPTED)
