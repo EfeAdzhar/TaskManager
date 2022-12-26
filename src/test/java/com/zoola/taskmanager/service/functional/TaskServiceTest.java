@@ -1,9 +1,10 @@
-package com.zoola.taskmanager.service;
+package com.zoola.taskmanager.service.functional;
 
 import com.zoola.taskmanager.customExceptions.StatusException;
 import com.zoola.taskmanager.customExceptions.TaskNotFoundException;
 import com.zoola.taskmanager.domain.Task;
 import com.zoola.taskmanager.domain.TaskStatus;
+import com.zoola.taskmanager.service.TaskService;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;

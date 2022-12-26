@@ -1,12 +1,16 @@
-package com.zoola.taskmanager.service;
+package com.zoola.taskmanager.service.functional;
 
 import com.zoola.taskmanager.customExceptions.UserException;
 import com.zoola.taskmanager.domain.User;
+import com.zoola.taskmanager.persistence.UserRepository;
+import com.zoola.taskmanager.service.UserService;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -16,6 +20,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class UserServiceTest {
 
+    @MockBean
+    private UserRepository userRepository;
+
+    @InjectMocks
     @Autowired
     private UserService userService;
 
