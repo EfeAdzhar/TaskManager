@@ -20,8 +20,9 @@ public class UserService {
         return userRepository.read(id);
     }
 
-    public void update(int id, User newUser) throws UserException {
+    public User update(int id, User newUser) throws UserException {
         userRepository.update(id, newUser);
+        return userRepository.read(id);
     }
 
     public void delete(int id) throws UserException {

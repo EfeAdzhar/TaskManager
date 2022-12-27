@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TaskService {
 
-    private final TaskRepository taskRepository = new TaskRepository();
+    private final TaskRepository taskRepository;
 
     //CRUD
     public void createOrUpdate(Task entity) {

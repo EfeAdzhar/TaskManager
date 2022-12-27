@@ -21,8 +21,9 @@ public class TaskTemplateService {
         return taskTemplateRepository.read(id);
     }
 
-    public void update(int id, TaskTemplate newTaskTemplate) throws TaskNotFoundException {
+    public TaskTemplate update(int id, TaskTemplate newTaskTemplate) throws TaskNotFoundException {
         taskTemplateRepository.update(id, newTaskTemplate);
+        return taskTemplateRepository.read(id);
     }
 
     public void delete(int id) throws TaskNotFoundException {

@@ -28,8 +28,8 @@ public class UserController {
 
     @PutMapping(path = "/update/{id}")
     @ResponseStatus(value = HttpStatus.ACCEPTED)
-    public void updateUser(@PathVariable int id, @RequestBody User user) throws UserException {
-        userService.update(id, user);
+    public User updateUser(@PathVariable int id, @RequestBody User user) throws UserException {
+        return userService.update(id, user);
     }
 
     @DeleteMapping(path = "/delete/{id}")

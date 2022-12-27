@@ -32,8 +32,8 @@ public class TaskTemplateController {
 
     @PutMapping(path = "/update/{id}")
     @ResponseStatus(value = HttpStatus.ACCEPTED)
-    public void update(@PathVariable int id, @RequestBody TaskTemplate newTaskTemplate) throws TaskNotFoundException {
-        taskTemplateService.update(id, newTaskTemplate);
+    public TaskTemplate update(@PathVariable int id, @RequestBody TaskTemplate newTaskTemplate) throws TaskNotFoundException {
+       return taskTemplateService.update(id, newTaskTemplate);
     }
 
     /**

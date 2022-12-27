@@ -12,7 +12,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoSettings;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 @MockitoSettings
@@ -25,39 +24,51 @@ public class TaskTemplateServiceTest {
     private TaskTemplateService taskTemplateService;
 
     @Test
-    public void testTaskTemplateIsCreated(@Mock TaskTemplate taskTemplate) throws TaskNotFoundException {
-       when(taskTemplateRepository.read(anyInt())).thenReturn(taskTemplate);
-       assertEquals(taskTemplateService.read(1), taskTemplate);
+    public void testTaskTemplateIsCreated(@Mock TaskTemplate taskTemplate) {
+        taskTemplateService.create(taskTemplate);
+        Mockito.verify(taskTemplateRepository).create(taskTemplate);
     }
 
     @Test
     public void testTaskTemplateIsRead(@Mock TaskTemplate taskTemplate) throws TaskNotFoundException {
-        when(taskTemplateRepository.read(anyInt())).thenReturn(taskTemplate);
+        when(taskTemplateRepository.read(1)).thenReturn(taskTemplate);
         assertEquals(taskTemplateService.read(1), taskTemplate);
     }
 
     @Test
-    public void testTaskTemplateIsUpdated(@Mock TaskTemplate taskTemplate) throws TaskNotFoundException {
-        /**@bug(FIXME: Don't know how to update it correctly)
-         * */
-        when(taskTemplateRepository.read(anyInt())).thenReturn(taskTemplate);
-        TaskTemplate newTaskTemplate = Mockito.mock(TaskTemplate.class);
-        assertNotEquals(taskTemplateService.read(1), newTaskTemplate);
+    public void testTaskTemplateIsUpdated(@Mock TaskTemplate taskTemplate, @Mock TaskTemplate newTaskTemplate) throws TaskNotFoundException {
+        //given
+        when(taskTemplateRepository.read(1)).thenReturn(newTaskTemplate);
+
+        //when
+        TaskTemplate actualTaskTemplate = taskTemplateService.update(1, taskTemplate);
+
+        //then
+        Mockito.verify(taskTemplateRepository).update(1, taskTemplate);
+        assertEquals(actualTaskTemplate, newTaskTemplate);
     }
 
     @Test
     public void testTaskTemplateIsDeleted() throws TaskNotFoundException {
-        /**@bug(FIXME: Don't know how to delete it correctly)*/
-        when(taskTemplateRepository.read(1)).thenThrow(TaskNotFoundException.class);
-        assertThrows(TaskNotFoundException.class, () -> taskTemplateService.read(1));
+        //given
+        int id = 1;
+
+        //when
+        taskTemplateService.delete(id);
+
+        //then
+        Mockito.verify(taskTemplateRepository).delete(id);
     }
 
     @Test
-    public void testTaskTemplateChangedTypes(@Mock TaskTemplate taskTemplate) throws TaskNotFoundException {
-        /**@bug(FIXME: Don't know how to change type it correctly)*/
-       when(taskTemplateRepository.read(1)).thenReturn(taskTemplate);
-       taskTemplate.setTaskType(TaskType.DEMO);
-       taskTemplateRepository.changeType(1, TaskType.BUG);
-       assertEquals(TaskType.BUG, taskTemplateService.read(1).getTaskType());
+    public void testTaskTemplateChangedTypes() throws TaskNotFoundException {
+        //given
+        int id = 1;
+
+        //when
+        taskTemplateService.changeType(id, TaskType.DEMO);
+
+        //then
+        Mockito.verify(taskTemplateRepository).changeType(id, TaskType.DEMO);
     }
 }

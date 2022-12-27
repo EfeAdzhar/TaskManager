@@ -7,9 +7,8 @@ import com.zoola.taskmanager.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoSettings;
-
-import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
@@ -21,42 +20,50 @@ class UserServiceTest {
     @Mock
     private UserRepository userRepositoryMock;
 
-   @InjectMocks
+    @InjectMocks
     private UserService userService;
 
     @Test
-    public void testUserIsCreated(@Mock User user) throws UserException {
-        when(userRepositoryMock.read(anyInt())).thenReturn(user);
-        assertNotNull(userService.read(5));
+    public void testUserIsCreated(@Mock User user) {
+        userService.create(user);
+        Mockito.verify(userRepositoryMock).create(user);
     }
 
     @Test
     public void testUserIsRead(@Mock User user) throws UserException {
+        //given
         when(userRepositoryMock.read(anyInt())).thenReturn(user);
-        assertEquals(userService.read(1), user);
+
+        //when
+        User readUser = userService.read(1);
+
+        //then
+        Mockito.verify(userRepositoryMock).read(1);
+        assertEquals(readUser, user);
     }
 
     @Test
-    public void testUserIsUpdated(@Mock User user) throws UserException {
-        when(userRepositoryMock.read(1)).thenReturn(creatingUser().get(0));
-        /**@bug(FIXME: Don't know how to update it correctly)
-         * */
-        userService.update(1, user);
-        assertNotEquals(user, userService.read(1));
+    public void testUserIsUpdated(@Mock User user, @Mock User newUser) throws UserException {
+        //given
+        when(userRepositoryMock.read(1)).thenReturn(newUser);
+
+        //when
+        User actualUser = userService.update(1, user);
+
+        //then
+        Mockito.verify(userRepositoryMock).update(1, user);
+        assertEquals(actualUser, newUser);
     }
 
     @Test
     public void testUserIsDeleted(@Mock User user) throws UserException {
-        when(userRepositoryMock.read(anyInt())).thenThrow(UserException.class);
-        /**@bug(FIXME: Don't know how to delete it correctly)
-         * */
-        userService.delete(1);
-        assertThrows(UserException.class, () -> userService.read(1));
-    }
+        //given
+        int id = 1;
 
-    //If we use @Mock on User argument in testUserIsRead, we don't need this method
-    public static List<User> creatingUser() {
-        return List.of(
-                        new User(1, "user-1@email.com", "user-1"));
+        //when
+        userService.delete(id);
+
+        //then
+        Mockito.verify(userRepositoryMock).delete(id);
     }
 }

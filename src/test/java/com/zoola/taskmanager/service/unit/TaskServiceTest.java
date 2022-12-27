@@ -26,44 +26,83 @@ public class TaskServiceTest {
     private TaskService taskService;
 
     @Test
-    public void testTaskIsCreated(@Mock Task task) throws TaskNotFoundException {
-        when(taskRepository.read(anyInt())).thenReturn(task);
-        assertEquals(taskService.read(1), task);
+    public void testTaskIsCreated(@Mock Task task) {
+        taskService.createOrUpdate(task);
+        Mockito.verify(taskRepository).createOrUpdate(task);
     }
 
     @Test
     public void testTaskIsRead(@Mock Task task) throws TaskNotFoundException {
-        when(taskRepository.read(anyInt())).thenReturn(task);
-        assertEquals(taskService.read(1), task);
+        //given
+        when(taskRepository.read(1)).thenReturn(task);
+
+        //when
+        Task readTask = taskService.read(1);
+
+        //then
+        Mockito.verify(taskRepository).read(1);
+        assertEquals(readTask, task);
     }
 
     @Test
     public void testTaskIsDeleted(@Mock Task task) throws TaskNotFoundException {
-        when(taskRepository.read(anyInt())).thenReturn(task);
-        taskRepository.delete(1);
+        //given
+        int id = 1;
+
+        //when
+        taskService.delete(id);
+
+        //then
+        Mockito.verify(taskRepository).delete(id);
     }
 
     @Test
     public void testTaskReadAllTasks() {
-       when(taskRepository.readAllTasks()).thenReturn("Here all tasks");
-       assertFalse(taskService.readAllTasks().isEmpty());
+        //given
+        when(taskRepository.readAllTasks()).thenReturn("All tasks");
+
+        //when
+        String allTasks = taskService.readAllTasks();
+
+        //then
+        Mockito.verify(taskRepository).readAllTasks();
+        assertEquals(allTasks, "All tasks");
     }
 
     @Test
     public void testUnassignTask(@Mock Task task) throws TaskNotFoundException {
-        when(taskRepository.read(anyInt())).thenReturn(task);
-        taskRepository.unassignTask(1);
+        //given
+        int id = 1;
+
+        //when
+        taskService.unassignTask(id);
+
+        //then
+        Mockito.verify(taskRepository).unassignTask(id);
     }
 
     @Test
     public void testReassignTask(@Mock Task task) throws TaskNotFoundException {
-        when(taskRepository.read(anyInt())).thenReturn(task);
-        taskRepository.reassignTask(1, 1);
+        //given
+        int id = 1;
+        int userId = 1;
+
+        //when
+        taskService.reassignTask(id, userId);
+
+        //then
+        Mockito.verify(taskRepository).reassignTask(id, userId);
     }
 
     @Test
-    public void testChangeTaskStatus(@Mock Task task) throws StatusException, TaskNotFoundException {
-        when(taskRepository.read(anyInt())).thenReturn(task);
-        taskRepository.changeTaskStatus(1, TaskStatus.COMPLETED);
+    public void testChangeTaskStatus() throws StatusException, TaskNotFoundException {
+        //given
+        int id = 1;
+
+        //when
+        taskService.changeTaskStatus(id, TaskStatus.COMPLETED);
+
+        //then
+        Mockito.verify(taskRepository).changeTaskStatus(id, TaskStatus.COMPLETED);
     }
 }
