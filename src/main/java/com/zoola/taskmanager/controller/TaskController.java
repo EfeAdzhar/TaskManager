@@ -16,23 +16,23 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
-    @GetMapping(path = "/get/{id}")
+    @GetMapping(path = "/{id}")
     public Task getTask(@PathVariable int id) throws TaskNotFoundException {
        return taskService.read(id);
     }
 
-    @GetMapping(path = "/getAll")
+    @GetMapping(path = "/all")
     public void getAllTasks() {
         taskService.readAllTasks();
     }
 
-    @PostMapping(path = "/create")
+    @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     public void createOrUpdateTask(@RequestBody Task task) {
         taskService.createOrUpdate(task);
     }
 
-    @DeleteMapping(path = "/delete/{id}")
+    @DeleteMapping(path = "/{id}")
     public void deleteTask(@PathVariable int id) throws TaskNotFoundException {
         taskService.delete(id);
     }

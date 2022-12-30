@@ -18,19 +18,19 @@ public class TaskTemplateController {
     @Autowired
     private TaskTemplateService taskTemplateService;
 
-    @GetMapping(path = "/get/{id}")
+    @GetMapping(path = "/{id}")
     @ResponseStatus(value = HttpStatus.FOUND)
     public TaskTemplate read(@PathVariable int id) throws TaskNotFoundException {
         return taskTemplateService.read(id);
     }
 
-    @PostMapping(path = "/create")
+    @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
     public void create(@RequestBody TaskTemplate entity) {
         taskTemplateService.create(entity);
     }
 
-    @PutMapping(path = "/update/{id}")
+    @PutMapping(path = "/{id}")
     @ResponseStatus(value = HttpStatus.ACCEPTED)
     public TaskTemplate update(@PathVariable int id, @RequestBody TaskTemplate newTaskTemplate) throws TaskNotFoundException {
        return taskTemplateService.update(id, newTaskTemplate);
@@ -39,7 +39,7 @@ public class TaskTemplateController {
     /**
      * @bug(FIXME: 21.12.2022) changeType: Can't get enum from request
      **/
-    @PutMapping(path = "/changeType/{id}")
+    @PutMapping(path = "/type/{id}")
     @ResponseStatus(value = HttpStatus.ACCEPTED)
     public void changeType(@PathVariable int id, @RequestBody Map<String, TaskType> type) throws TaskNotFoundException {
         Optional<TaskType> taskType = Optional.empty();
@@ -51,8 +51,8 @@ public class TaskTemplateController {
         }
     }
 
-    @DeleteMapping(path = "/delete/{id}")
-    @ResponseStatus(value = HttpStatus.OK)
+    @DeleteMapping(path = "/{id}")
+    @ResponseStatus(value = HttpStatus.ACCEPTED)
     public void delete(@PathVariable int id) throws TaskNotFoundException {
         taskTemplateService.delete(id);
     }

@@ -30,7 +30,7 @@ public class TaskTemplateRepository {
     }
 
     public TaskTemplate read(int id) throws TaskNotFoundException {
-        /**@bug(FIXME: Throwing noSuchElementException instead of TaskNotFoundException**/
+        /**@bug(FIXME:Throwing noSuchElementException instead of TaskNotFoundException)*/
         return Optional.of(data.stream()
                 .filter(taskTemplate -> Objects.equals(taskTemplate.getId(), id))
                 .findFirst()

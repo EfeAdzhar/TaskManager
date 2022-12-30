@@ -47,7 +47,7 @@ public class TaskRepository {
     /**@bug(FIXME: java.lang.NumberFormatException: For input string: " ")*/
     public void unassignTask(int id) throws TaskNotFoundException {
         Task task = read(id);
-        task.setUserId(Integer.parseInt(""));
+        task.setUserId(Integer.parseInt(" "));
     }
 
     public void reassignTask(int id, int userId) throws TaskNotFoundException {
