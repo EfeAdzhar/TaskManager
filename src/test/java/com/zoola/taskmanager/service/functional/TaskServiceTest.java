@@ -11,8 +11,6 @@ import com.zoola.taskmanager.service.TaskService;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.InjectMocks;
-import org.mockito.junit.jupiter.MockitoSettings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -24,11 +22,9 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 
 @SpringBootTest
-@MockitoSettings
 public class TaskServiceTest {
 
     @Autowired
-    @InjectMocks
     private TaskService taskService;
 
     @MockBean

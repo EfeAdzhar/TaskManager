@@ -3,20 +3,19 @@ package com.zoola.taskmanager.rest.functional;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zoola.taskmanager.controller.TaskTemplateController;
+import com.zoola.taskmanager.customExceptions.TaskNotFoundException;
 import com.zoola.taskmanager.domain.TaskTemplate;
 import com.zoola.taskmanager.domain.TaskType;
+import com.zoola.taskmanager.dto.TaskTypeDto;
 import com.zoola.taskmanager.persistence.TaskTemplateRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -24,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(TaskTemplateController.class)
 @ComponentScan("com.zoola.taskmanager")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class TaskTemplateControllerTest {
 
     @Autowired
@@ -31,6 +31,9 @@ public class TaskTemplateControllerTest {
 
     @Autowired
     private TaskTemplateRepository taskTemplateRepository;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
     public void getTaskTemplate() throws Exception {
@@ -43,7 +46,7 @@ public class TaskTemplateControllerTest {
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        TaskTemplate expectedTaskTemplate = toObject(TaskTemplate.class, taskTemplateString);
+        TaskTemplate expectedTaskTemplate = objectMapper.readValue(taskTemplateString, TaskTemplate.class);
 
         //Then
         assertEquals(taskTemplate, expectedTaskTemplate);
@@ -56,7 +59,7 @@ public class TaskTemplateControllerTest {
 
         //When
         mockMvc.perform(post("/taskTemplate")
-                .content(asJsonString(taskTemplate))
+                .content(objectMapper.writeValueAsString(taskTemplate))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
@@ -74,7 +77,7 @@ public class TaskTemplateControllerTest {
 
         //When
         mockMvc.perform(put("/taskTemplate/1")
-                .content(asJsonString(newTaskTemplate))
+                .content(objectMapper.writeValueAsString(newTaskTemplate))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isAccepted());
@@ -86,13 +89,13 @@ public class TaskTemplateControllerTest {
     @Test
     public void updateTaskTemplateType() throws Exception {
         //Given
-        TaskTemplate oldTaskTemplate = new TaskTemplate(1, "taskTemplate-1", "first task", TaskType.DEMO);
-        Map<String, TaskType> taskTypeMap = new HashMap<>();
-        taskTypeMap.put("type", TaskType.BUG);
-        taskTemplateRepository.create(oldTaskTemplate);
+        TaskTemplate taskTemplate = new TaskTemplate(1, "taskTemplate-1", "first task", TaskType.DEMO);
+        TaskTypeDto taskTypeDto = new TaskTypeDto();
+        taskTypeDto.setTaskType(TaskType.BUG);
+        taskTemplateRepository.create(taskTemplate);
 
         //When
-        mockMvc.perform(put("/taskTemplate/type/1").content(asJsonString(taskTypeMap))
+        mockMvc.perform(put("/taskTemplate/type/1").content(objectMapper.writeValueAsString(taskTypeDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isAccepted());
@@ -112,18 +115,6 @@ public class TaskTemplateControllerTest {
                 .andExpect(status().isAccepted());
 
         //Then
-        assertThrows(NoSuchElementException.class, () -> taskTemplateRepository.read(1));
-    }
-     /*
-    Source:
-    http://www.masterspringboot.com/testing/testing-spring-boot-applications-with-mockmvc/
-    */
-    /**@// *FIXME: 29.12.2022 ObjectMapper should be a bean*/
-    public static String asJsonString(Object obj) throws JsonProcessingException {
-        return new ObjectMapper().writeValueAsString(obj);
-    }
-
-    public static <T> T toObject(Class<T> clazz, String content) throws JsonProcessingException {
-        return new ObjectMapper().readValue(content, clazz);
+        assertThrows(TaskNotFoundException.class, () -> taskTemplateRepository.read(1));
     }
 }

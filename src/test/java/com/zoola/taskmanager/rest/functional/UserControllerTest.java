@@ -11,10 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.*;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import java.util.*;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -22,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @WebMvcTest(UserController.class)
 @ComponentScan("com.zoola.taskmanager")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class UserControllerTest {
 
     @Autowired
@@ -29,6 +29,9 @@ public class UserControllerTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
     public void getUser() throws Exception {
@@ -42,7 +45,7 @@ public class UserControllerTest {
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        User actualUser = toObject(User.class, actualUserString);
+        User actualUser =  objectMapper.readValue(actualUserString, User.class);
 
          // Then
          assertEquals(expectedUser, actualUser);
@@ -55,7 +58,7 @@ public class UserControllerTest {
 
         //When
         mockMvc.perform(MockMvcRequestBuilders.post("/user")
-                        .content(asJsonString(user))
+                        .content(objectMapper.writeValueAsString(user))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
@@ -73,7 +76,7 @@ public class UserControllerTest {
 
         //When
         mockMvc.perform(MockMvcRequestBuilders.put("/user/1")
-                        .content(asJsonString(newUser))
+                        .content(objectMapper.writeValueAsString(newUser))
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isAccepted());
@@ -92,18 +95,5 @@ public class UserControllerTest {
                 .andExpect(status().isAccepted());
         //Then
         assertThrows(UserNotFoundException.class, () -> userRepository.read(1));
-    }
-
-    /*
-    Source:
-    http://www.masterspringboot.com/testing/testing-spring-boot-applications-with-mockmvc/
-    */
-    /**@// *FIXME: 29.12.2022 ObjectMapper should be a bean*/
-    public static String asJsonString(Object obj) throws JsonProcessingException {
-        return new ObjectMapper().writeValueAsString(obj);
-    }
-
-    public static <T> T toObject(Class<T> clazz, String content) throws JsonProcessingException {
-        return new ObjectMapper().readValue(content, clazz);
     }
 }
