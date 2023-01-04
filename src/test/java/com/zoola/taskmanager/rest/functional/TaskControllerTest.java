@@ -6,12 +6,9 @@ import com.zoola.taskmanager.controller.TaskTemplateController;
 import com.zoola.taskmanager.domain.Task;
 import com.zoola.taskmanager.domain.TaskStatus;
 import com.zoola.taskmanager.persistence.TaskRepository;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -19,7 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -120,7 +116,6 @@ public class TaskControllerTest {
 
     }
 
-
     public List<Task> creatingTask() {
         return List.of(new Task(1, "task-1", "first task", TaskStatus.NEW, 1, 1, 1, 1));
     }
@@ -129,7 +124,7 @@ public class TaskControllerTest {
     Source:
     http://www.masterspringboot.com/testing/testing-spring-boot-applications-with-mockmvc/
     */
-    /**@// *FIXME: 29.12.2022 ObjectMapper should be a bean*/
+    /**@//*FIXME: 29.12.2022 ObjectMapper should be a bean*/
     public static String asJsonString(Object obj) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(obj);
     }

@@ -15,7 +15,7 @@ public class Task {
     private String description;
     private TaskStatus status;
     private int taskTemplateId;
-    private int userId;
+    private Integer userId;
     private int assigneeId;
     private int version;
 }

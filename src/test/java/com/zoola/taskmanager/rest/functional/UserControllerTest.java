@@ -3,6 +3,7 @@ package com.zoola.taskmanager.rest.functional;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zoola.taskmanager.controller.UserController;
+import com.zoola.taskmanager.customExceptions.UserNotFoundException;
 import com.zoola.taskmanager.domain.User;
 import com.zoola.taskmanager.persistence.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -90,7 +91,7 @@ public class UserControllerTest {
         mockMvc.perform(delete("/user/1"))
                 .andExpect(status().isAccepted());
         //Then
-        assertThrows(NoSuchElementException.class, () -> userRepository.read(1));
+        assertThrows(UserNotFoundException.class, () -> userRepository.read(1));
     }
 
     /*

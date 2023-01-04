@@ -1,6 +1,6 @@
 package com.zoola.taskmanager.service.functional;
 
-import com.zoola.taskmanager.customExceptions.UserException;
+import com.zoola.taskmanager.customExceptions.UserNotFoundException;
 import com.zoola.taskmanager.domain.User;
 import com.zoola.taskmanager.service.UserService;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,21 +19,16 @@ public class UserServiceTest {
     @Autowired
     private UserService userService;
 
-    // @BeforeAll
-    // public void creatingUser(User user) throws UserException {
-    //   userService.create(user);
-    //}
-
     @ParameterizedTest
     @MethodSource("creatingUser")
-    public void userShouldBeCreatedAndRead(User entity) throws UserException {
+    public void userShouldBeCreatedAndRead(User entity) throws UserNotFoundException {
         userService.create(entity);
         assertEquals(userService.read(1), entity);
     }
 
     @ParameterizedTest
     @MethodSource("creatingUser")
-    public void userShouldBeUpdated(User entity) throws UserException {
+    public void userShouldBeUpdated(User entity) throws UserNotFoundException {
         User newUser = new User(1, "new-user1@gmail.com", "name");
         userService.create(entity);
         userService.update(1, newUser);
@@ -43,10 +37,10 @@ public class UserServiceTest {
 
     @ParameterizedTest
     @MethodSource("creatingUser")
-    public void userShouldBeDeletedFromList(User entity) throws UserException {
+    public void userShouldBeDeletedFromList(User entity) throws UserNotFoundException {
         userService.create(entity);
         userService.delete(1);
-        assertThrows(NoSuchElementException.class, () -> userService.read(1));
+        assertThrows(UserNotFoundException.class, () -> userService.read(1));
     }
 
     public static List<Arguments> creatingUser() {

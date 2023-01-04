@@ -3,17 +3,16 @@ package com.zoola.taskmanager.persistence;
 import com.zoola.taskmanager.customExceptions.TaskNotFoundException;
 import com.zoola.taskmanager.domain.TaskTemplate;
 import com.zoola.taskmanager.domain.TaskType;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
+@RequiredArgsConstructor
 public class TaskTemplateRepository {
 
-    private final List<TaskTemplate> data = new ArrayList<>();
+    private final List<TaskTemplate> data;
 
     //CRUD
     public void create(TaskTemplate entity) {
@@ -30,11 +29,14 @@ public class TaskTemplateRepository {
     }
 
     public TaskTemplate read(int id) throws TaskNotFoundException {
-        /**@bug(FIXME:Throwing noSuchElementException instead of TaskNotFoundException)*/
-        return Optional.of(data.stream()
-                .filter(taskTemplate -> Objects.equals(taskTemplate.getId(), id))
-                .findFirst()
-                .get()).orElseThrow(TaskNotFoundException::new);
+        try {
+            return data.stream()
+                    .filter(taskTemplate -> Objects.equals(taskTemplate.getId(), id))
+                    .findFirst()
+                    .get();
+        } catch (NoSuchElementException noSuchElementException) {
+            throw new TaskNotFoundException();
+        }
     }
 
     public void delete(int id) throws TaskNotFoundException {

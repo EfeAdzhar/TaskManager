@@ -1,25 +1,38 @@
 package com.zoola.taskmanager.service.functional;
 
-import com.zoola.taskmanager.customExceptions.StatusException;
+import com.zoola.taskmanager.customExceptions.StatusChangeException;
 import com.zoola.taskmanager.customExceptions.TaskNotFoundException;
+import com.zoola.taskmanager.customExceptions.UserNotFoundException;
 import com.zoola.taskmanager.domain.Task;
 import com.zoola.taskmanager.domain.TaskStatus;
+import com.zoola.taskmanager.domain.User;
+import com.zoola.taskmanager.persistence.UserRepository;
 import com.zoola.taskmanager.service.TaskService;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoSettings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @SpringBootTest
+@MockitoSettings
 public class TaskServiceTest {
 
     @Autowired
+    @InjectMocks
     private TaskService taskService;
+
+    @MockBean
+    private UserRepository userRepository;
 
     @ParameterizedTest
     @MethodSource("createTaskTemplate")
@@ -33,7 +46,7 @@ public class TaskServiceTest {
     public void taskShouldBeDeleted(Task entity) throws TaskNotFoundException {
         taskService.createOrUpdate(entity);
         taskService.delete(1);
-        assertThrows(NoSuchElementException.class, () -> taskService.read(1));
+        assertThrows(TaskNotFoundException.class, () -> taskService.read(1));
     }
 
     @ParameterizedTest
@@ -43,31 +56,45 @@ public class TaskServiceTest {
         assertFalse(taskService.readAllTasks().isBlank());
     }
 
-    /**@bug(FIXME: java.lang.NumberFormatException: For input string: " ") on taskAssignShouldBeUnassigned*/
-    /*
     @ParameterizedTest
     @MethodSource("createTaskTemplate")
     public void taskAssignShouldBeUnassigned(Task task) throws TaskNotFoundException {
         taskService.createOrUpdate(task);
         taskService.unassignTask(1);
-        assertThrows(TaskNotFoundException.class, () -> taskService.read(1));
+        assertNull(taskService.read(1).getUserId());
     }
-     */
 
     @ParameterizedTest
     @MethodSource("createTaskTemplate")
-    public void taskAssignShouldBeReassigned(Task entity) throws TaskNotFoundException {
+    public void taskAssignShouldBeReassigned(Task entity) throws TaskNotFoundException, UserNotFoundException {
         taskService.createOrUpdate(entity);
+        when(userRepository.read(2)).thenReturn(new User(2, "email", "name"));
         taskService.reassignTask(1, 2);
         assertEquals(taskService.read(1).getUserId(), 2);
     }
 
     @ParameterizedTest
     @MethodSource("createTaskTemplate")
-    public void taskShouldChangeStatus(Task entity) throws TaskNotFoundException, StatusException {
+    public void taskAssignShouldNotReassignBecauseNoSuchUser(Task entity) throws UserNotFoundException {
+        taskService.createOrUpdate(entity);
+        when(userRepository.read(anyInt())).thenThrow(UserNotFoundException.class);
+        assertThrows(UserNotFoundException.class, () -> taskService.reassignTask(1, 2));
+    }
+
+    @ParameterizedTest
+    @MethodSource("createTaskTemplate")
+    public void taskShouldChangeStatus(Task entity) throws TaskNotFoundException, StatusChangeException {
         taskService.createOrUpdate(entity);
         taskService.changeTaskStatus(1, TaskStatus.IN_PROGRESS);
         assertEquals(taskService.read(1).getStatus().toString(), TaskStatus.IN_PROGRESS.toString());
+    }
+
+    @ParameterizedTest
+    @MethodSource("createTaskTemplate")
+    public void taskChangeStatusShouldThrowException(Task entity) {
+        entity.setStatus(TaskStatus.COMPLETED);
+        taskService.createOrUpdate(entity);
+        assertThrows(StatusChangeException.class, () -> taskService.changeTaskStatus(1, TaskStatus.IN_PROGRESS));
     }
 
     public static List<Arguments> createTaskTemplate() {

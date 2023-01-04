@@ -1,6 +1,6 @@
 package com.zoola.taskmanager.service.unit;
 
-import com.zoola.taskmanager.customExceptions.UserException;
+import com.zoola.taskmanager.customExceptions.UserNotFoundException;
 import com.zoola.taskmanager.domain.User;
 import com.zoola.taskmanager.persistence.UserRepository;
 import com.zoola.taskmanager.service.UserService;
@@ -30,7 +30,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void testUserIsRead(@Mock User user) throws UserException {
+    public void testUserIsRead(@Mock User user) throws UserNotFoundException {
         //given
         when(userRepositoryMock.read(anyInt())).thenReturn(user);
 
@@ -43,7 +43,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void testUserIsUpdated(@Mock User user, @Mock User newUser) throws UserException {
+    public void testUserIsUpdated(@Mock User user, @Mock User newUser) throws UserNotFoundException {
         //given
         when(userRepositoryMock.read(1)).thenReturn(newUser);
 
@@ -56,7 +56,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void testUserIsDeleted(@Mock User user) throws UserException {
+    public void testUserIsDeleted(@Mock User user) throws UserNotFoundException {
         //given
         int id = 1;
 

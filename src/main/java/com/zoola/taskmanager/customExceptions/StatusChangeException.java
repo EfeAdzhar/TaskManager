@@ -1,7 +1,7 @@
 package com.zoola.taskmanager.customExceptions;
 
-public class StatusException extends Exception {
-    public StatusException() {
+public class StatusChangeException extends Exception {
+    public StatusChangeException() {
         super("Task status is completed or failed");
     }
 }

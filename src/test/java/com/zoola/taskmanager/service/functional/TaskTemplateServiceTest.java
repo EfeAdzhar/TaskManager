@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -39,7 +38,7 @@ public class TaskTemplateServiceTest {
 
     @ParameterizedTest
     @MethodSource("createTaskTemplate")
-    public void taskTemplateShouldChangeStatus(TaskTemplate entity) throws TaskNotFoundException {
+    public void taskTemplateShouldChangeType(TaskTemplate entity) throws TaskNotFoundException {
         taskTemplateService.create(entity);
         taskTemplateService.changeType(1, TaskType.BUG);
         assertEquals(taskTemplateService.read(1).getTaskType(), TaskType.BUG);
@@ -50,7 +49,7 @@ public class TaskTemplateServiceTest {
     public void delete(TaskTemplate entity) throws TaskNotFoundException {
         taskTemplateService.create(entity);
         taskTemplateService.delete(1);
-        assertThrows(NoSuchElementException.class, () -> taskTemplateService.read(1));
+        assertThrows(TaskNotFoundException.class, () -> taskTemplateService.read(1));
     }
 
     public static List<Arguments> createTaskTemplate() {

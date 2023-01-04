@@ -1,7 +1,8 @@
 package com.zoola.taskmanager.service.unit;
 
-import com.zoola.taskmanager.customExceptions.StatusException;
+import com.zoola.taskmanager.customExceptions.StatusChangeException;
 import com.zoola.taskmanager.customExceptions.TaskNotFoundException;
+import com.zoola.taskmanager.customExceptions.UserNotFoundException;
 import com.zoola.taskmanager.domain.Task;
 import com.zoola.taskmanager.domain.TaskStatus;
 import com.zoola.taskmanager.persistence.TaskRepository;
@@ -13,7 +14,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoSettings;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 @MockitoSettings
@@ -82,7 +82,7 @@ public class TaskServiceTest {
     }
 
     @Test
-    public void testReassignTask(@Mock Task task) throws TaskNotFoundException {
+    public void testReassignTask(@Mock Task task) throws TaskNotFoundException, UserNotFoundException {
         //given
         int id = 1;
         int userId = 1;
@@ -95,7 +95,7 @@ public class TaskServiceTest {
     }
 
     @Test
-    public void testChangeTaskStatus() throws StatusException, TaskNotFoundException {
+    public void testChangeTaskStatus() throws StatusChangeException, TaskNotFoundException {
         //given
         int id = 1;
 

@@ -1,18 +1,18 @@
 package com.zoola.taskmanager.controller;
 
-import com.zoola.taskmanager.customExceptions.UserException;
+import com.zoola.taskmanager.customExceptions.UserNotFoundException;
 import com.zoola.taskmanager.domain.User;
 import com.zoola.taskmanager.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(path = "/user")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @GetMapping(path = "/{id}")
     @ResponseStatus(value = HttpStatus.FOUND)
@@ -28,13 +28,13 @@ public class UserController {
 
     @PutMapping(path = "/{id}")
     @ResponseStatus(value = HttpStatus.ACCEPTED)
-    public User updateUser(@PathVariable int id, @RequestBody User user) throws UserException {
+    public User updateUser(@PathVariable int id, @RequestBody User user) throws UserNotFoundException {
         return userService.update(id, user);
     }
 
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(value = HttpStatus.ACCEPTED)
-    public void deleteUser(@PathVariable int id) throws UserException {
+    public void deleteUser(@PathVariable int id) throws UserNotFoundException {
         userService.delete(id);
     }
 }

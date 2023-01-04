@@ -1,31 +1,34 @@
 package com.zoola.taskmanager.persistence;
 
-import com.zoola.taskmanager.customExceptions.UserException;
+import com.zoola.taskmanager.customExceptions.UserNotFoundException;
 import com.zoola.taskmanager.domain.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
+@RequiredArgsConstructor
 public class UserRepository {
 
-    private final List<User> data = new ArrayList<>();
+    private final List<User> data;
 
     public void create(User entity) {
         data.add(entity);
     }
 
-    public User read(int id) throws UserException {
-        return Optional.of(data.stream()
-                .filter(user -> user.getId() == id)
-                .findFirst()
-                .get()).orElseThrow(UserException::new);
+    public User read(int id) throws UserNotFoundException {
+        try {
+            return data.stream()
+                    .filter(user -> user.getId() == id)
+                    .findFirst()
+                    .get();
+        } catch (NoSuchElementException noSuchElementException) {
+            throw new UserNotFoundException();
+        }
     }
 
-    public void update(int id, User newUser) throws UserException {
+    public void update(int id, User newUser) throws UserNotFoundException {
         for (int i = 0; i < data.size(); i++) {
             User oldUser = data.get(i);
             if (oldUser.getId() == id) {
@@ -34,7 +37,7 @@ public class UserRepository {
         }
     }
 
-    public void delete(int id) throws UserException {
+    public void delete(int id) throws UserNotFoundException {
         data.removeIf(user -> Objects.equals(user.getId(), id));
     }
 }

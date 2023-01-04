@@ -1,7 +1,8 @@
 package com.zoola.taskmanager.service;
 
-import com.zoola.taskmanager.customExceptions.StatusException;
+import com.zoola.taskmanager.customExceptions.StatusChangeException;
 import com.zoola.taskmanager.customExceptions.TaskNotFoundException;
+import com.zoola.taskmanager.customExceptions.UserNotFoundException;
 import com.zoola.taskmanager.domain.Task;
 import com.zoola.taskmanager.domain.TaskStatus;
 import com.zoola.taskmanager.persistence.TaskRepository;
@@ -35,11 +36,11 @@ public class TaskService {
         taskRepository.unassignTask(id);
     }
 
-    public void reassignTask(int id, int userId) throws TaskNotFoundException {
+    public void reassignTask(int id, int userId) throws TaskNotFoundException, UserNotFoundException {
         taskRepository.reassignTask(id, userId);
     }
 
-    public void changeTaskStatus(int id, TaskStatus taskStatus) throws StatusException, TaskNotFoundException {
+    public void changeTaskStatus(int id, TaskStatus taskStatus) throws StatusChangeException, TaskNotFoundException {
         taskRepository.changeTaskStatus(id, taskStatus);
     }
 }
