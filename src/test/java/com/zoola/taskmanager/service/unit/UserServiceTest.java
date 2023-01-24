@@ -56,7 +56,7 @@ class UserServiceTest {
     }
 
     @Test
-    public void testUserIsDeleted(@Mock User user) throws UserNotFoundException {
+    public void testUserIsDeleted() throws UserNotFoundException {
         //given
         int id = 1;
 

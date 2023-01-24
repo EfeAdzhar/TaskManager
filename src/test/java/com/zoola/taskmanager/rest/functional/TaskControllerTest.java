@@ -78,6 +78,21 @@ public class TaskControllerTest {
 
     @ParameterizedTest
     @MethodSource("creatingTask")
+    public void updateTask(Task task) throws Exception {
+        //Given
+        taskRepository.createOrUpdate(task);
+
+        //When
+        mockMvc.perform(post("/task")
+                .content(objectMapper.writeValueAsString(task))
+                .contentType(MediaType.APPLICATION_JSON));
+
+        //Then
+        assertEquals(taskRepository.read(1).getVersion(), 2);
+    }
+
+    @ParameterizedTest
+    @MethodSource("creatingTask")
     public void deleteTask() throws Exception {
         //When
         mockMvc.perform(delete("/task/1"));

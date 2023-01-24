@@ -2,7 +2,7 @@ package com.zoola.taskmanager.service;
 
 import com.zoola.taskmanager.customExceptions.UserNotFoundException;
 import com.zoola.taskmanager.domain.User;
-import com.zoola.taskmanager.persistence.UserRepository;
+import com.zoola.taskmanager.persistence.UserRepositoryInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepository;
+    private final UserRepositoryInterface userRepository;
 
     public void create(User entity) {
         userRepository.create(entity);
@@ -28,4 +28,8 @@ public class UserService {
     public void delete(int id) throws UserNotFoundException {
         userRepository.delete(id);
     }
+
+    //CUSTOM
+    public void creareTask() {}
+
 }

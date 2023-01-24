@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zoola.taskmanager.controller.UserController;
 import com.zoola.taskmanager.customExceptions.UserNotFoundException;
 import com.zoola.taskmanager.domain.User;
-import com.zoola.taskmanager.persistence.UserRepository;
+import com.zoola.taskmanager.persistence.UserRepositoryInterface;
+import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -20,6 +21,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @WebMvcTest(UserController.class)
 @ComponentScan("com.zoola.taskmanager")
+@AutoConfigureEmbeddedDatabase(provider = AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY,
+        type = AutoConfigureEmbeddedDatabase.DatabaseType.POSTGRES)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class UserControllerTest {
 
@@ -27,7 +30,7 @@ public class UserControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserRepositoryInterface userRepository;
 
     @Autowired
     private ObjectMapper objectMapper;

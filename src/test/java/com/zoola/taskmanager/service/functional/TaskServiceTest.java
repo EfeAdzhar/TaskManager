@@ -39,6 +39,14 @@ public class TaskServiceTest {
 
     @ParameterizedTest
     @MethodSource("createTaskTemplate")
+    public void taskShouldBeUpdated(Task entity) throws TaskNotFoundException  {
+        taskService.createOrUpdate(entity);
+        taskService.createOrUpdate(entity);
+        assertEquals(taskService.read(1).getVersion(), 2);
+    }
+
+    @ParameterizedTest
+    @MethodSource("createTaskTemplate")
     public void taskShouldBeDeleted(Task entity) throws TaskNotFoundException {
         taskService.createOrUpdate(entity);
         taskService.delete(1);

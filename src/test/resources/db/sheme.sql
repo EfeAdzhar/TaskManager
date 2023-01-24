@@ -25,7 +25,7 @@ create table task_template
     taskType    task_type   not null
 );
 
-create table task
+create table tasks
 (
     id             integer primary key,
     name           varchar(50) not null,

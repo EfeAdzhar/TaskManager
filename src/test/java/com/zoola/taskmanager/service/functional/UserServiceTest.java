@@ -3,6 +3,7 @@ package com.zoola.taskmanager.service.functional;
 import com.zoola.taskmanager.customExceptions.UserNotFoundException;
 import com.zoola.taskmanager.domain.User;
 import com.zoola.taskmanager.service.UserService;
+import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -14,6 +15,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@AutoConfigureEmbeddedDatabase(provider = AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY,
+        type = AutoConfigureEmbeddedDatabase.DatabaseType.POSTGRES)
 public class UserServiceTest {
 
     @Autowired
