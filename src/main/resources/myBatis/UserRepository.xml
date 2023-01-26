@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zoola.taskmanager.persistence.UserRepositoryInterface">
+    <resultMap id="UserResultMap"
+               type="com.zoola.taskmanager.domain.User">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="email" column="email" jdbcType="TEXT"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select
+            id="read"
+            parameterType="id"
+            resultMap="UserResultMap"
+            resultType="com.zoola.taskmanager.domain.User"
+    >
+        select *
+        from users
+        where id = #{id}
+    </select>
+
+    <update
+            id="update"
+            parameterType="newUser">
+        update users
+        set email = #{newUser.email},
+            name  = #{newUser.name}
+        where id = #{id}
+    </update>
+
+    <insert
+            id="create"
+            parameterType="com.zoola.taskmanager.domain.User">
+        insert into users
+        values (#{id}, #{email}, #{name});
+    </insert>
+
+    <delete id="delete"
+            parameterType="id">
+        delete
+        from users
+        where id = #{id};
+    </delete>
+</mapper>

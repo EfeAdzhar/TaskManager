@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-@WebMvcTest(TaskTemplateController.class)
+@WebMvcTest(TaskControllerTest.class)
 @ComponentScan("com.zoola.taskmanager")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class TaskControllerTest {
