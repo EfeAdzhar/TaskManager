@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.zoola.taskmanager.persistence.UserRepositoryInterface">
+<mapper namespace="com.zoola.taskmanager.persistence.UserRepository">
     <resultMap id="UserResultMap"
                type="com.zoola.taskmanager.domain.User">
         <result property="id" column="id" jdbcType="INTEGER"/>

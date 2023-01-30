@@ -1,7 +1,6 @@
 package com.zoola.taskmanager.rest.functional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zoola.taskmanager.controller.TaskTemplateController;
 import com.zoola.taskmanager.customExceptions.TaskNotFoundException;
 import com.zoola.taskmanager.domain.Task;
 import com.zoola.taskmanager.domain.TaskStatus;
