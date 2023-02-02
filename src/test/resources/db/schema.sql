@@ -34,9 +34,47 @@ create table tasks
     taskTemplateId integer     not null,
     userId         integer,
     assigneeId     integer     not null,
-    version        integer     not null default 1.0,
+    version        float    not null default 1.0,
 
     constraint fk_taskTemplateId foreign key (taskTemplateId) references task_template (id),
     constraint fk_userId foreign key (userId) references users (id),
     constraint fk_assigneeId foreign key (assigneeId) references users (id)
 );
+
+/*FUNCTIONS*/
+/*TASK*/
+create function changeTaskStatus(oldStatus task_status, newStatus task_status)
+    returns task_status as
+$$
+begin
+    if oldStatus = 'COMPLETED' or oldStatus = 'FAILED' then
+        raise exception 'Task status is completed or failed';
+    else
+        return newStatus;
+    END IF;
+END;
+$$
+    language plpgsql volatile;
+
+create function createOrUpdate(oldTask tasks, newTask tasks)
+    returns tasks as
+$$
+begin
+    if oldTask.id = newTask.id then
+        update oldTask
+        set name           = newTask.name,
+            description    = newTask.description,
+            status         = newTask.status,
+            taskTemplateId = newTask.taskTemplateId,
+            userId         = newTask.userId,
+            assigneeId     = newTask.assigneeId,
+            version        = version + 1;
+    else
+        insert into tasks
+        values (newTask.id, newTask.name, newTask.description,
+                newTask.status, newTask.taskTemplateId, newTask.userId,
+                newTask.assigneeId, newTask.version);
+    END IF;
+END;
+$$
+    language plpgsql volatile;

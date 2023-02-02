@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zoola.taskmanager.persistence.TaskTemplateRepository">
+    <resultMap id="TaskTemplateResultMap"
+               type="com.zoola.taskmanager.domain.TaskTemplate">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="TEXT"/>
+        <result property="taskType" column="taskType" jdbcType="com.zoola.taskmanager.domain.TaskType"/>
+    </resultMap>
+
+    <select id="read"
+            resultMap="TaskTemplateResultMap"
+            parameterType="id"
+            resultType="com.zoola.taskmanager.domain.TaskTemplate">
+        select *
+        from task_template
+        where id = #{id}
+    </select>
+
+    <insert
+            id="create"
+            parameterType="entity">
+        insert into task_template
+        values (#{id}, #{name}, #{description}, #{taskType});
+    </insert>
+
+    <update id="update"
+            parameterType="newTaskTemplate">
+        update task_template
+        set id          = #{newTaskTemplate.id},
+            name        = #{newTaskTemplate.name},
+            description = #{newTaskTemplate.description},
+            taskType    = #{newTaskTemplate.taskType}
+        where id = #{id}
+    </update>
+
+    <delete id="delete"
+            parameterType="id">
+        delete
+        from task_template
+        where id = #{id}
+    </delete>
+
+    <update id="changeType"
+            parameterType="type">
+        update task_template
+        set taskType = #{type}
+        where id = #{id}
+
+    </update>
+</mapper>

@@ -1,51 +1,24 @@
 package com.zoola.taskmanager.persistence;
 
-import com.zoola.taskmanager.customExceptions.TaskNotFoundException;
 import com.zoola.taskmanager.domain.TaskTemplate;
 import com.zoola.taskmanager.domain.TaskType;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import com.zoola.taskmanager.persistence.supportClasses.CrudInterface;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
-import java.util.*;
+@Mapper
+public interface TaskTemplateRepository extends CrudInterface<TaskTemplate> {
+    @Override
+    void create(@Param("entity") TaskTemplate taskTemplate);
 
-@Repository
-@RequiredArgsConstructor
-public class TaskTemplateRepository {
+    @Override
+    TaskTemplate read(@Param("id") int id);
 
-    private final List<TaskTemplate> data;
+    @Override
+    void update(@Param("id") int id, @Param("newTaskTemplate") TaskTemplate taskTemplate);
 
-    //CRUD
-    public void create(TaskTemplate entity) {
-        data.add(entity);
-    }
+    @Override
+    void delete(@Param("id") int id);
 
-    public void update(int id, TaskTemplate newTaskTemplate) {
-        for (int i = 0; i < data.size(); i++) {
-            var oldTaskTemplate = data.get(i);
-            if (Objects.equals(oldTaskTemplate.getId(), id)) {
-                data.set(i, newTaskTemplate);
-            }
-        }
-    }
-
-    public TaskTemplate read(int id) throws TaskNotFoundException {
-        try {
-            return data.stream()
-                    .filter(taskTemplate -> Objects.equals(taskTemplate.getId(), id))
-                    .findFirst()
-                    .get();
-        } catch (NoSuchElementException noSuchElementException) {
-            throw new TaskNotFoundException();
-        }
-    }
-
-    public void delete(int id) throws TaskNotFoundException {
-        data.removeIf(taskTemplate -> Objects.equals(taskTemplate.getId(), id));
-    }
-
-    //CUSTOM
-    public void changeType(int id, TaskType type) throws TaskNotFoundException {
-        TaskTemplate taskTemplate = read(id);
-        taskTemplate.setTaskType(type);
-    }
+    void changeType(@Param("id") int id, @Param("type") TaskType type);
 }

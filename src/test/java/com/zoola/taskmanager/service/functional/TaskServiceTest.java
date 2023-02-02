@@ -8,12 +8,14 @@ import com.zoola.taskmanager.domain.TaskStatus;
 import com.zoola.taskmanager.domain.User;
 import com.zoola.taskmanager.persistence.UserRepository;
 import com.zoola.taskmanager.service.TaskService;
+import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.annotation.DirtiesContext;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -22,12 +24,15 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 
 @SpringBootTest
+@AutoConfigureEmbeddedDatabase(provider = AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY,
+        type = AutoConfigureEmbeddedDatabase.DatabaseType.POSTGRES)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class TaskServiceTest {
 
     @Autowired
     private TaskService taskService;
 
-    @MockBean
+    @Autowired
     private UserRepository userRepository;
 
     @ParameterizedTest

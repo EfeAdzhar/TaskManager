@@ -17,5 +17,5 @@ public class Task {
     private int taskTemplateId;
     private Integer userId;
     private int assigneeId;
-    private int version;
+    private float version;
 }

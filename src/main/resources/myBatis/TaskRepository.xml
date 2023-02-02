@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper>
+    <resultMap id="TaskResult" type="com.zoola.taskmanager.domain.Task">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="TEXT"/>
+        <result property="status" column="status" jdbcType="com.zoola.taskmanager.domain.TaskStatus"/>
+        <result property="taskTemplateId" column="taskTemplateId" jdbcType="INTEGER"/>
+        <result property="userId" column="taskTemplateId" jdbcType="INTEGER"/>
+        <result property="assigneeId" column="assigneeId" jdbcType="INTEGER"/>
+        <result property="version" column="version" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <select id="read"
+            parameterType="id"
+            resultType="com.zoola.taskmanager.domain.Task"
+            resultMap="TaskResult">
+        select *
+        from tasks
+        where id = #{id}
+    </select>
+
+    <insert id="createOrUpdate"
+            parameterType="entity">
+
+        update tasks
+        set tasks = createOrUpdate(tasks, ${entity})
+        where id = #{id}
+    </insert>
+
+    <delete id="delete"
+            parameterType="id">
+        delete
+        from tasks
+        where id = #{id}
+    </delete>
+
+    <select id="readAllTasks"
+            parameterType="id"
+            resultType="java.lang.String"
+            resultMap="TaskResult">
+        select *
+        from tasks
+    </select>
+
+    <update id="unassignTask"
+            parameterType="id">
+        update tasks
+        set userId = null
+    </update>
+
+    <update id="changeTaskStatus"
+            parameterType="taskStatus">
+        update tasks
+        set status = changeTaskStatus(status, #{taskStatus})
+    </update>
+
+</mapper>

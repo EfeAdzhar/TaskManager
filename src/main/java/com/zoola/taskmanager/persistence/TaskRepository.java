@@ -1,76 +1,27 @@
 package com.zoola.taskmanager.persistence;
 
-import com.zoola.taskmanager.customExceptions.StatusChangeException;
-import com.zoola.taskmanager.customExceptions.TaskNotFoundException;
-import com.zoola.taskmanager.customExceptions.UserNotFoundException;
 import com.zoola.taskmanager.domain.Task;
 import com.zoola.taskmanager.domain.TaskStatus;
-import com.zoola.taskmanager.domain.User;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import com.zoola.taskmanager.persistence.supportClasses.CrudInterface;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
-import java.util.*;
+@Mapper
+public interface TaskRepository extends CrudInterface<Task> {
 
-@Repository
-@RequiredArgsConstructor
-public class TaskRepository {
+    void createOrUpdate(@Param("entity") Task task);
 
-    private final List<Task> data;
+    @Override
+    Task read(int id);
 
-    private final UserRepository userRepository;
+    @Override
+    void delete(int id);
 
-    //CRUD
-    public void createOrUpdate(Task entity) {
-        int currentVersion = data.stream()
-                .filter(task -> Objects.equals(task.getId(), entity.getId()))
-                .mapToInt(Task::getVersion)
-                .max().orElse(0);
-        entity.setVersion(currentVersion + 1);
-        data.add(entity);
-    }
+    String readAllTasks();
 
-    public Task read(int id) throws TaskNotFoundException {
-        //Finds the final version of a task
-        try {
-            return data.stream()
-                    .filter(task -> Objects.equals(id, task.getId()))
-                    .max(Comparator.comparing(Task::getVersion))
-                    .get();
-        } catch (NoSuchElementException noSuchElementException) {
-            throw new TaskNotFoundException();
-        }
-    }
+    void unassignTask(@Param("id") int id);
 
-    public void delete(int id) throws TaskNotFoundException {
-        data.removeIf(task -> Objects.equals(task.getId(), id));
-    }
+    void reassignTask(@Param("id") int id, @Param("userId") int userId);
 
-    //CUSTOM
-    public String readAllTasks() {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (Task task : data) {
-            stringBuilder.append(task).append("/n");
-        }
-        return stringBuilder.toString();
-    }
-
-    public void unassignTask(int id) throws TaskNotFoundException {
-        Task task = read(id);
-        task.setUserId(null);
-    }
-
-    public void reassignTask(int id, int userId) throws TaskNotFoundException, UserNotFoundException {
-        Task task = read(id);
-        User read = userRepository.read(userId);
-        task.setUserId(read.getId());
-    }
-
-    public void changeTaskStatus(int id, TaskStatus taskStatus) throws StatusChangeException, TaskNotFoundException {
-        Task task = read(id);
-        if (task.getStatus().equals(TaskStatus.COMPLETED) || task.getStatus().equals(TaskStatus.FAILED)) {
-            throw new StatusChangeException();
-        } else {
-            task.setStatus(taskStatus);
-        }
-    }
+    void changeTaskStatus(@Param("id") int id, @Param("taskStatus") TaskStatus taskStatus);
 }
