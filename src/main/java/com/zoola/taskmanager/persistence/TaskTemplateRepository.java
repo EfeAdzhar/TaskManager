@@ -2,12 +2,12 @@ package com.zoola.taskmanager.persistence;
 
 import com.zoola.taskmanager.domain.TaskTemplate;
 import com.zoola.taskmanager.domain.TaskType;
-import com.zoola.taskmanager.persistence.supportClasses.CrudInterface;
+import com.zoola.taskmanager.persistence.supportClasses.CrudRepository;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 @Mapper
-public interface TaskTemplateRepository extends CrudInterface<TaskTemplate> {
+public interface TaskTemplateRepository extends CrudRepository<TaskTemplate> {
     @Override
     void create(@Param("entity") TaskTemplate taskTemplate);
 

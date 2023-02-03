@@ -78,3 +78,30 @@ begin
 END;
 $$
     language plpgsql volatile;
+
+/**ERROR*/
+create function getUser(userId integer)
+    returns users as
+$$
+begin
+    select *
+    from users
+    where id = userId;
+end;
+$$
+    language plpgsql volatile;
+
+create function reassignTask(taskId integer, newUserId integer)
+    returns integer as
+$$
+declare
+    newUser users = getUser(newUserId);
+begin
+    if newUser is not null then
+        update tasks
+        set userId = newUser.id
+        where id = taskId;
+    end if;
+END;
+$$
+    language plpgsql volatile;

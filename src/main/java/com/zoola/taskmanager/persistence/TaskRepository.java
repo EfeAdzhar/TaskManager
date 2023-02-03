@@ -2,12 +2,12 @@ package com.zoola.taskmanager.persistence;
 
 import com.zoola.taskmanager.domain.Task;
 import com.zoola.taskmanager.domain.TaskStatus;
-import com.zoola.taskmanager.persistence.supportClasses.CrudInterface;
+import com.zoola.taskmanager.persistence.supportClasses.CrudRepository;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 @Mapper
-public interface TaskRepository extends CrudInterface<Task> {
+public interface TaskRepository extends CrudRepository<Task> {
 
     void createOrUpdate(@Param("entity") Task task);
 

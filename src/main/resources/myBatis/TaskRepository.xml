@@ -53,10 +53,16 @@
         set userId = null
     </update>
 
+    <update id="reassignTask"
+            parameterType="userId">
+        update tasks
+        set userId = reassignTask(#{id}, #{userId})
+    </update>
+
+
     <update id="changeTaskStatus"
             parameterType="taskStatus">
         update tasks
         set status = changeTaskStatus(status, #{taskStatus})
     </update>
-
 </mapper>
