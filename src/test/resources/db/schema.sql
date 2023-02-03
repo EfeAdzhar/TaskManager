@@ -89,6 +89,7 @@ begin
     where id = userId;
 end;
 $$
+
     language plpgsql volatile;
 
 create function reassignTask(taskId integer, newUserId integer)
